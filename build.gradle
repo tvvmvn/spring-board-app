@@ -1,0 +1,44 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(24)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+  
+  // 웹 & 타임리프
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+  // JDBC & MySQL
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+  runtimeOnly 'com.mysql:mysql-connector-j'
+
+  // 스프링 시큐리티 7
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+  // 💡 개발 편의를 위한 툴킷 (HTML, 클래스 변경 시 자동 리로드 지원)
+  // developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+</head>
+
+<body>
+  <h2>🔑 커스텀 로그인</h2>
+
+  <!-- Error messages -->
+  <div th:if="${param.error}" style="color: red; font-weight: bold; margin-bottom: 15px;">
+    아이디 또는 비밀번호가 올바르지 않습니다.
+  </div>
+
+  <!-- Login Form -->
+  <form th:action="@{/member/login}" method="post">
+    <div>아이디: <input type="text" name="username" required></div><br>
+    <div>비밀번호: <input type="password" name="password" required></div><br>
+    <button type="submit">로그인</button>
+    <a th:href="@{/member/join}">회원가입하러 가기</a>
+  </form>
+</body>
+
+</html>

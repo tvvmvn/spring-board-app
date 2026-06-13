@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>글쓰기</title>
+</head>
+
+<body>
+  <h2>✍️ 글쓰기</h2>
+
+  <!-- Error messages -->
+  <div th:if="${errorMessage}" style="color: red; font-weight: bold;" th:text="${errorMessage}"></div>
+  
+  <!-- Create form -->
+  <form th:action="@{/board/write}" th:object="${boardForm}" method="post">
+    <div>제목: <input type="text" th:field="*{title}" required></div><br>
+    <div>내용: <textarea th:field="*{content}" rows="5" required></textarea></div><br>
+    <button type="submit">등록</button> <a th:href="@{/board/list}">취소</a>
+  </form>
+</body>
+
+</html>

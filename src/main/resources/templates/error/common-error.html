@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>⚠️ 안내</title>
+</head>
+
+<body style="text-align: center; padding-top: 50px;">
+  <h1 style="color: #e74c3c; font-size: 5em; margin-bottom: 0;" th:text="${statusCode}">
+    500
+  </h1>
+
+  <h2 style="margin-top: 10px;">
+    🚨 요청을 처리할 수 없습니다.
+  </h2>
+  <hr style="width: 50%;">
+
+  <p style="font-size: 1.2em; font-weight: bold;" th:text="${errorMessage}">
+    에러 메시지
+  </p>
+
+  <br>
+  <hr style="width: 50%;">
+  <br>
+  <button onclick="history.back();">이전 페이지로</button>
+  <a th:href="@{/board/list}"><button>게시판 목록으로</button></a>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+</head>
+
+<body>
+  <h2>📋 게시판 목록</h2>
+
+  <!-- Authenticated -->
+  <div th:if="${#authorization.expression('isAuthenticated()')}">
+    <span th:text="${#authentication.name} + '님 환영합니다! '"></span>
+    <form th:action="@{/member/logout}" method="post" style="display:inline;">
+      <button type="submit">로그아웃</button>
+    </form>
+    <a th:href="@{/board/write}"><button>글쓰기</button></a>
+  </div>
+  
+  <!-- Not Authenticated -->
+  <div th:if="${!#authorization.expression('isAuthenticated()')}">
+    <a th:href="@{/member/login}"><button>로그인 하러가기</button></a>
+  </div>
+  
+  <hr>
+
+  <!-- Posts list -->
+  <table border="1" style="width: 100%; text-align: center;">
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>작성자</th>
+        <th>관리</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="b : ${boards}">
+        <td th:text="${b.id}">1</td>
+        <td th:text="${b.title}">제목</td>
+        <td th:text="${b.content}">내용</td>
+        <td th:text="${b.writerName}">작성자</td>
+        <!-- menu -->
+        <td>
+          <th:block
+            th:if="${#authorization.expression('isAuthenticated()') && b.writerName == #authentication.name}">
+            <!-- update link -->
+            <a th:href="@{/board/edit(id=${b.id})}">
+              <button>수정</button>
+            </a>
+            <!-- delete form -->
+            <form th:action="@{/board/delete}" method="post" style="display:inline;">
+              <input type="hidden" name="id" th:value="${b.id}">
+              <button type="submit" onclick="return confirm('정말 삭제할까요?');">삭제</button>
+            </form>
+          </th:block>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
