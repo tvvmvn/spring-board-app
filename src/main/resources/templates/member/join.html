@@ -14,9 +14,19 @@
   
   <!-- Sign Up Form -->
   <form th:action="@{/member/join}" th:object="${memberForm}" method="post">
-    <div>아이디: <input type="text" th:field="*{username}" required></div><br>
-    <div>비밀번호: <input type="password" th:field="*{password}" required></div><br>
-    <div>비밀번호 확인: <input type="password" th:field="*{passwordCheck}" required></div><br>
+    <div>
+      아이디: <input type="text" th:field="*{username}">
+      <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red; font-size: 13px;"></p>
+    </div>
+    
+    <div>
+      비밀번호: <input type="password" th:field="*{password}">
+      <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red; font-size: 13px;"></p>
+    </div>
+    <div>
+      비밀번호 확인: <input type="password" th:field="*{passwordConfirm}">
+      <p th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}" style="color: red; font-size: 13px;"></p>
+    </div>
     <button type="submit">가입하기</button>
     <a th:href="@{/member/login}">로그인으로 이동</a>
   </form>

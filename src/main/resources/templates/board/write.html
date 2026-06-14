@@ -14,9 +14,20 @@
   
   <!-- Create form -->
   <form th:action="@{/board/write}" th:object="${boardForm}" method="post">
-    <div>제목: <input type="text" th:field="*{title}" required></div><br>
-    <div>내용: <textarea th:field="*{content}" rows="5" required></textarea></div><br>
-    <button type="submit">등록</button> <a th:href="@{/board/list}">취소</a>
+    <div>
+      제목: <input type="text" th:field="*{title}" style="width: 300px;">
+      <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red; font-size: 13px;"></p>
+    </div>
+    
+    <div>
+      내용: <br>
+      <textarea th:field="*{content}" rows="10" cols="40"></textarea>
+      <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color: red; font-size: 13px;"></p>
+    </div>
+    
+    <br>
+    <button type="submit">등록하기</button>
+    <a th:href="@{/board/list}">취소</a>
   </form>
 </body>
 

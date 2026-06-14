@@ -1,8 +1,14 @@
 package com.example.boardapp.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class BoardWriteRequest {
 
+  // null, 빈칸(""), 공백(" ") 싹 다 필터링
+  @NotBlank(message = "제목은 필수 입력 항목입니다.") 
   private String title;
+  
+  @NotBlank(message = "본문 내용을 입력해 주세요.")
   private String content;
 
   public BoardWriteRequest() {}
@@ -22,15 +28,5 @@ public class BoardWriteRequest {
   
   public void setContent(String content) {
     this.content = content;
-  }
-
-  // 게시물 유효성 검사
-  public void validate() {
-    if (title != null && !title.trim().isEmpty()) {
-      throw new IllegalArgumentException("제목을 입력하세요.");
-    }
-    if (content != null && !content.trim().isEmpty()) {
-      throw new IllegalArgumentException("내용을 입력하세요.");
-    }
   }
 }

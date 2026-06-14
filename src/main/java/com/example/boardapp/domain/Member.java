@@ -41,14 +41,4 @@ public class Member {
   public String getRole() {
     return role;
   }
-
-  // 아이디 정규식 검증 로직 (소문자 + 숫자 4~15자)
-  public boolean isValidUsername() {
-    return this.username != null && this.username.matches("^[a-z0-9]{4,15}$");
-  }
-
-  // 비밀번호 길이 검증
-  public boolean isValidPassword() {
-    return this.password != null && this.password.length() >= 6 && this.password.length() <= 20;
-  }
 }

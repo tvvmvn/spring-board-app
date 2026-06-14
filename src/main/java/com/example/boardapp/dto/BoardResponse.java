@@ -9,8 +9,7 @@ public class BoardResponse {
   private String memberName;
 
   // 💡 기본 생성자
-  public BoardResponse() {
-  }
+  public BoardResponse() {}
 
   // Getter/Setter
   public Long getId() {

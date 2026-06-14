@@ -4,8 +4,11 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.naming.Binding;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +20,8 @@ import com.example.boardapp.dto.BoardResponse;
 import com.example.boardapp.dto.BoardWriteRequest;
 import com.example.boardapp.repository.BoardRepository;
 import com.example.boardapp.repository.MemberRepository;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class BoardController {
@@ -36,7 +41,6 @@ public class BoardController {
     List<BoardResponse> dtos = boardRepository.findAll().stream()
         .map(board -> {
           BoardResponse dto = new BoardResponse(); // 1. 빈 DTO 객체 생성 (기본 생성자)
-
           // 2. Setter를 통해 원본 엔티티(board)의 값들을 이식
           dto.setId(board.getId());
           dto.setTitle(board.getTitle());
@@ -64,29 +68,27 @@ public class BoardController {
 
   @PostMapping("/board/write")
   public String write(
-    @ModelAttribute("boardForm") BoardWriteRequest dto, 
-    Model model, 
+    @Valid @ModelAttribute("boardForm") BoardWriteRequest dto, 
+    BindingResult bindingResult,
     Principal principal) {
 
-    try {
-      dto.validate();
-
-      Member loginMember = memberRepository.findByUsername(principal.getName())
-          .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
-
-      Board board = new Board(dto.getTitle(), dto.getContent(), loginMember);
-      boardRepository.save(board);
-
-      return "redirect:/board/list";
-
-    } catch (Exception e) {
-      model.addAttribute("errorMessage", e.getMessage());
-      return "board/write";
+    // 1️⃣ [앞문 방어] @Valid 조건 위반 시 사용자가 입력한 값 그대로 글쓰기 폼으로 튕기기
+    if (bindingResult.hasErrors()) {
+      // 타임리프의 th:field가 DTO에 담긴 값과 에러 메시지를 자동으로 매핑해 줍니다.
+      return "board/write"; 
     }
+
+    Member loginMember = memberRepository.findByUsername(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
+
+    Board board = new Board(dto.getTitle(), dto.getContent(), loginMember);
+    boardRepository.save(board);
+
+    return "redirect:/board/list";
   }
 
   @GetMapping("/board/edit")
-  public String editForm(@RequestParam Long id, Model model, Principal principal) {
+  public String editForm(@RequestParam Long id, Model model) {
     
     Board board = boardRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글: " + id));
@@ -106,9 +108,16 @@ public class BoardController {
   @PostMapping("/board/edit")
   public String edit(
     @RequestParam("id") Long id, 
-    @ModelAttribute("boardForm") BoardWriteRequest dto, 
+    @Valid @ModelAttribute("boardForm") BoardWriteRequest dto, 
+    BindingResult bindingResult,
     Model model, 
     Principal principal) {
+
+    // 1️⃣ 검증 실패 시: id값을 다시 넘겨줘야 에러 화면에서도 수정 폼이 유지됨
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("boardId", id); 
+      return "board/edit";
+    }
     
     Board board = boardRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글"));
@@ -117,25 +126,10 @@ public class BoardController {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자"));
 
     // 백엔드 데이터 변조 대비 소유권 2차 보안 검증
-    if (!board.getMember().getId().equals(loginMember.getId())) {
-      return "redirect:/board/list";
+    if (board.getMember().getId().equals(loginMember.getId())) {
+      board.updatePost(dto.getTitle(), dto.getContent());
+      boardRepository.update(board); // 영속화 (업데이트)
     }
-
-    try {
-      dto.validate();
-
-    } catch (Exception e) {
-      model.addAttribute("errorMessage", e.getMessage());
-      model.addAttribute("boardId", id);
-      model.addAttribute("boardForm", dto);
-      return "board/edit";
-    }
-    
-    // 💡 옛날 방식: board.setTitle(...); board.setContent(...); (X)
-    // 💡 변경 방식: 엔티티의 핵심 비즈니스 메서드 딱 하나만 깔끔하게 호출! (O)
-    board.updatePost(request.getTitle(), request.getContent());
-
-    boardRepository.update(board); // 영속화 (업데이트)
 
     return "redirect:/board/list";
   }
@@ -147,7 +141,7 @@ public class BoardController {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글: " + id));
     
     Member loginMember = memberRepository.findByUsername(principal.getName())
-      .orElse(null);
+      .orElseThrow(() -> new IllegalArgumentException("사용자 정보가 존재하지 않습니다"));
 
     // 💡 확실히 본인이 작성한 글일 때만 레포지토리에 격추 명령 하달
     if (board.getMember().getId().equals(loginMember.getId())) {

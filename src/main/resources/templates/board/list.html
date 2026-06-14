@@ -41,11 +41,11 @@
         <td th:text="${b.id}">1</td>
         <td th:text="${b.title}">제목</td>
         <td th:text="${b.content}">내용</td>
-        <td th:text="${b.writerName}">작성자</td>
+        <td th:text="${b.memberName}">작성자</td>
         <!-- menu -->
         <td>
           <th:block
-            th:if="${#authorization.expression('isAuthenticated()') && b.writerName == #authentication.name}">
+            th:if="${#authorization.expression('isAuthenticated()') && b.memberName == #authentication.name}">
             <!-- update link -->
             <a th:href="@{/board/edit(id=${b.id})}">
               <button>수정</button>

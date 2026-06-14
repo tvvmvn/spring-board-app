@@ -41,21 +41,8 @@ public class Board {
     return member;
   }
 
-  // 게시글 공백 유효성 검증
-  public boolean isValid() {
-
-    boolean isTitle = title != null && !title.trim().isEmpty();
-    boolean isContent = content != null && !content.trim().isEmpty();
-
-    return isTitle && isContent;
-  }
-
   // 게시물 수정용
   public void updatePost(String title, String content) {
-    // 여기에 단순 대입뿐만 아니라 검증 로직도 넣을 수 있어서 안전합니다.
-    if (title == null || title.trim().isEmpty()) {
-      throw new IllegalArgumentException("수정할 제목은 공백일 수 없습니다.");
-    }
     this.title = title;
     this.content = content;
   }
