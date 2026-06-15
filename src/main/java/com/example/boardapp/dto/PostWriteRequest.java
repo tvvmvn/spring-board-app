@@ -2,7 +2,7 @@ package com.example.boardapp.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class BoardWriteRequest {
+public class PostWriteRequest {
 
   // null, 빈칸(""), 공백(" ") 싹 다 필터링
   @NotBlank(message = "제목은 필수 입력 항목입니다.") 
@@ -11,7 +11,7 @@ public class BoardWriteRequest {
   @NotBlank(message = "본문 내용을 입력해 주세요.")
   private String content;
 
-  public BoardWriteRequest() {}
+  public PostWriteRequest() {}
 
   // Getter/Setter
   public String getTitle() {

@@ -4,13 +4,25 @@
   <meta charset="UTF-8">
   <title>⚠️ 시스템 오류 안내</title>
   <style>
-    body { text-align: center; padding-top: 80px; font-family: 'Malgun Gothic', sans-serif; background: #f8f9fa; }
-    .error-container { border: 1px solid #e9ecef; display: inline-block; padding: 40px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 500px; }
-    h1 { margin-top: 0; font-size: 28px; }
-    .status-code { font-size: 14px; color: #adb5bd; font-weight: bold; margin-bottom: 10px; }
-    .msg-box { font-size: 16px; color: #495057; background: #f1f3f5; padding: 15px; border-radius: 6px; margin: 20px 0; line-height: 1.5; }
-    .btn-home { inline-block; background: #228be6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; }
-    .btn-home:hover { background: #1c7ed6; }
+    /* 전체 디자인 시스템과 패밀리 룩을 맞춘 세련된 에러 페이지 */
+    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .error-container { background-color: #ffffff; padding: 50px 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15); width: 100%; max-width: 500px; box-sizing: border-box; text-align: center; }
+    
+    /* 상태 코드 라벨 */
+    .status-code { font-size: 13px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+    
+    /* 에러 종류별 타이틀 스타일 */
+    h1 { margin-top: 0; margin-bottom: 20px; font-size: 26px; font-weight: 700; }
+    .title-400 { color: #e67e22; } /* 경고/잘못된 요청은 오렌지 */
+    .title-404 { color: #34495e; } /* 페이지 없음은 시크한 다크그레이 */
+    .title-500 { color: #e74c3c; } /* 서버 고장은 강렬한 레드 */
+    
+    /* 메시지 박스 */
+    .msg-box { font-size: 15px; color: #4f5f6f; background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #dcdde1; margin: 25px 0; line-height: 1.6; text-align: left; }
+    
+    /* 메인 푸른빛 홈 버튼 */
+    .btn-home { display: block; background-color: #3498db; color: white; padding: 14px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; transition: background-color 0.2s ease; margin-top: 10px; }
+    .btn-home:hover { background-color: #2980b9; }
   </style>
 </head>
 <body>
@@ -19,19 +31,22 @@
     <div class="status-code" th:text="'HTTP STATUS CODE : ' + ${status}">HTTP STATUS CODE : 400</div>
 
     <div th:if="${status == 400}">
-      <h1 style="color: #e03131;">🛑 잘못된 요청입니다.</h1>
+      <h1 class="title-400">🛑 잘못된 요청입니다.</h1>
+    </div>
+
+    <div th:if="${status == 404}">
+      <h1 class="title-404">🔍 페이지를 찾을 수 없습니다.</h1>
     </div>
 
     <div th:if="${status == 500}">
-      <h1 style="color: #f03e3e;">🔥 시스템 고장이 발생했습니다.</h1>
+      <h1 class="title-500">🔥 시스템 오류가 발생했습니다.</h1>
     </div>
 
     <div class="msg-box">
-      <strong th:text="${message}">여기에 구체적인 안내 메시지가 출력됩니다.</strong>
+      💬 <strong th:text="${message}">여기에 구체적인 안내 메시지가 출력됩니다.</strong>
     </div>
 
-    <br>
-    <a th:href="@{/board/list}" class="btn-home">🏠 게시판 목록으로 돌아가기</a>
+    <a th:href="@{/posts}" class="btn-home">🏠 게시판 목록으로 돌아가기</a>
   </div>
 
 </body>

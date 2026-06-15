@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.boardapp.mapper.PostMapper">
+
+  <!-- result map -->
+  <resultMap id="postResultMap" type="com.example.boardapp.domain.Post">
+    <id property="id" column="post_id"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <!-- author -->
+    <association property="member" javaType="com.example.boardapp.domain.Member">
+      <id property="id" column="member_id"/>
+      <result property="username" column="username"/>
+    </association>
+  </resultMap>
+
+  <!--  findAll -->
+  <select id="findAll" resultMap="postResultMap">
+    SELECT 
+      p.id AS post_id,
+      p.title,
+      p.content,
+      m.id AS member_id,
+      m.username
+    FROM post p
+    INNER JOIN member m ON p.member_id = m.id
+    ORDER BY p.id DESC
+  </select>
+
+  <!-- findById -->
+  <select id="findById" parameterType="long" resultMap="postResultMap">
+    SELECT 
+      p.id AS post_id,
+      p.title,
+      p.content,
+      m.id AS member_id,
+      m.username
+    FROM post p
+    INNER JOIN member m ON p.member_id = m.id
+    WHERE p.id = #{id}
+  </select>
+
+  <!-- save -->
+  <insert id="save" parameterType="com.example.boardapp.domain.Post" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO post (title, content, member_id)
+    VALUES (#{title}, #{content}, #{member.id})
+  </insert>
+
+  <!-- update -->
+  <update id="update" parameterType="com.example.boardapp.domain.Post">
+    UPDATE post
+    SET title = #{title}, content = #{content}
+    WHERE id = #{id}
+  </update>
+
+  <!-- delete -->
+  <delete id="delete" parameterType="long">
+    DELETE FROM post
+    WHERE id = #{id}
+  </delete>
+
+</mapper>
