@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 보기</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f1c40f;
+      padding-bottom: 10px;
+    }
+
+    /* 메타 정보 박스 (작성자, 글ID 등) */
+    .info-box {
+      margin-bottom: 25px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      color: #495057;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #495057;
+    }
+
+    /* 읽기 전용 텍스트 영역 스타일 */
+    .view-control {
+      width: 100%;
+      padding: 12px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ced4da;
+      box-sizing: border-box;
+      font-size: 16px;
+      color: #212529;
+    }
+
+    .content-area {
+      min-height: 200px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      padding: 15px;
+      background-color: #ffff;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn-list {
+      background-color: #95a5a6;
+      color: white;
+      flex-grow: 1;
+    }
+
+    .btn-edit {
+      background-color: #f1c40f;
+      color: white;
+      flex-grow: 1;
+    }
+
+    .btn-delete {
+      background-color: #e74c3c;
+      color: white;
+      flex-grow: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2 th:text="${post.title}">게시물 제목이 들어갑니다.</h2>
+
+    <div class="info-box">
+      <div><strong>글 ID:</strong> <span th:text="${post.id}">0</span></div>
+
+      <div><strong>작성자:</strong> <span th:text="${post.memberName}">홍길동</span></div>
+    </div>
+
+    <div class="form-group">
+      <label>내용</label>
+      <div class="content-area" th:text="${post.content}">게시물 내용이 들어갑니다.</div>
+    </div>
+    <div class="btn-group">
+      <a th:href="@{/posts}" class="btn btn-list">목록으로</a>
+
+      <th:block th:if="${#authentication.name == post.memberName}">
+        <form th:action="@{/posts/delete(id=${post.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');"
+          style="margin: 0; display: flex; flex-grow: 1;">
+          <button type="submit" class="btn btn-delete" style="width: 100%;">삭제하기</button>
+        </form>
+      </th:block>
+    </div>
+  </div>
+</body>
+
+</html>

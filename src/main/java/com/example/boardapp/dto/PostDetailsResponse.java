@@ -1,12 +1,13 @@
 package com.example.boardapp.dto;
 
-public class PostListResponse {
+public class PostDetailsResponse {
 
   private Long id;
   private String title;
+  private String content;
   private String memberName;
 
-  public PostListResponse() {}
+  public PostDetailsResponse() {}
 
   // Getter/Setter
   public Long getId() {
@@ -23,6 +24,14 @@ public class PostListResponse {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public String getMemberName() {

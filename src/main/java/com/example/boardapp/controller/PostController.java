@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.boardapp.domain.Member;
 import com.example.boardapp.domain.Post;
+import com.example.boardapp.dto.PostDetailsResponse;
 import com.example.boardapp.dto.PostListResponse;
 import com.example.boardapp.dto.PostWriteRequest;
 import com.example.boardapp.mapper.MemberMapper;
@@ -61,8 +62,6 @@ public class PostController {
           PostListResponse dto = new PostListResponse();
           dto.setId(post.getId());
           dto.setTitle(post.getTitle());
-          dto.setContent(post.getContent());
-          dto.setMemberId(post.getMember().getId());
           dto.setMemberName(post.getMember().getUsername());
           return dto;
         })
@@ -81,48 +80,22 @@ public class PostController {
     return "post/write";
   }
 
-  @GetMapping("/edit")
-  public String editForm(@RequestParam Long id, Model model) {
+  @GetMapping("/details")
+  public String modify(@RequestParam("id") Long id, Model model) {
 
-    Post post = postMapper.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글: " + id));
+      Post post = postMapper.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물"));
+      
+      PostDetailsResponse dto = new PostDetailsResponse();
+      
+      dto.setId(post.getId());
+      dto.setTitle(post.getTitle());
+      dto.setContent(post.getContent());
+      dto.setMemberName(post.getMember().getUsername());
 
-    PostWriteRequest dto = new PostWriteRequest();
-    dto.setTitle(post.getTitle());
-    dto.setContent(post.getContent());
+    model.addAttribute("post", dto);
 
-    model.addAttribute("postId", id);
-    model.addAttribute("postForm", dto);
-
-    return "post/edit";
-  }
-
-  @PostMapping("/edit")
-  public String modify(
-      @RequestParam("id") Long id,
-      @Valid @ModelAttribute("postForm") PostWriteRequest dto,
-      BindingResult bindingResult,
-      Model model,
-      Principal principal) {
-
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("postId", id);
-
-      return "post/edit";
-    }
-
-    Post post = postMapper.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글"));
-
-    Member loginMember = memberMapper.findByUsername(principal.getName())
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자"));
-
-    if (post.getMember().getId().equals(loginMember.getId())) {
-      post.updatePost(dto.getTitle(), dto.getContent());
-      postMapper.update(post);
-    }
-
-    return "redirect:/posts";
+    return "post/details";
   }
 
   @PostMapping("/delete")
