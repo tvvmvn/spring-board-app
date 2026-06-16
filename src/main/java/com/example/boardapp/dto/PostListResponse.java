@@ -1,6 +1,6 @@
 package com.example.boardapp.dto;
 
-public class PostResponse {
+public class PostListResponse {
 
   private Long id;
   private String title;
@@ -8,8 +8,7 @@ public class PostResponse {
   private Long memberId;
   private String memberName;
 
-  // 기본 생성자
-  public PostResponse() {}
+  public PostListResponse() {}
 
   // Getter/Setter
   public Long getId() {

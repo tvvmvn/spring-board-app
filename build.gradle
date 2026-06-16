@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '4.0.6'
+	id 'org.springframework.boot' version '4.0.7'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -18,30 +18,27 @@ repositories {
 }
 
 dependencies {
-  // 웹 & 타임리프
-  implementation 'org.springframework.boot:spring-boot-starter-web'
-  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-  // JDBC & MySQL
-  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-  runtimeOnly 'com.mysql:mysql-connector-j'
-  
-  // mybatis
-  implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
-
-  // 스프링 시큐리티 7
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	
   implementation 'org.springframework.boot:spring-boot-starter-security'
-  implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-
-  // 이 녀석이 있어야 자바 유효성 검증 도구
+	
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	
   implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-  // 개발 편의를 위한 툴킷 (HTML, 클래스 변경 시 자동 리로드 지원)
-  // developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 
-  // 기본 의존성들 
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+  testImplementation 'org.springframework.boot:spring-boot-starter-jdbc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -5,18 +5,15 @@ import jakarta.validation.constraints.Size;
 
 public class SignUpRequest {
 
-  @Size(min = 4, max = 20, message = "아이디는 4자 이상 20자 이하로 입력해 주세요.")
+  @Size(min = 4, max = 20, message = "아이디는 4자 이상 20자 이하로 입력하세요.")
   private String username;
 
   @Size(min = 6, message = "비밀번호는 최소 6글자 이상이어야 합니다.")
   private String password;
   
-  // 강의 포인트: DB 테이블엔 없지만 화면 인증에 필요한 필드 분리
-  // [추가] 비밀번호 확인 필드 (형식 검증은 위 필드와 똑같이 맞춰줍니다)
-  @NotBlank(message = "비밀번호 확인은 필수 항목입니다.")
+  @NotBlank(message = "비밀번호 재입력은 필수 항목입니다.")
   private String passwordConfirm;
 
-  // 기본 생성자 (Spring의 데이터 바인딩 로직 강의용 필수 요소)
   public SignUpRequest() {}
 
   // Getter/Setter

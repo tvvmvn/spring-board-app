@@ -2,21 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.boardapp.mapper.PostMapper">
 
+<!-- PPT에 붙여넣자. view 파일이랑 같이!
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.MyMapper">
+  
+</mapper> -->
+
+<mapper namespace="com.example.boardapp.mapper.PostMapper">
+  
   <!-- result map -->
   <resultMap id="postResultMap" type="com.example.boardapp.domain.Post">
     <id property="id" column="post_id"/>
     <result property="title" column="title"/>
     <result property="content" column="content"/>
-    <!-- author -->
     <association property="member" javaType="com.example.boardapp.domain.Member">
       <id property="id" column="member_id"/>
       <result property="username" column="username"/>
     </association>
   </resultMap>
-
-  <!--  findAll -->
+  
+  <!-- findAll -->
   <select id="findAll" resultMap="postResultMap">
     SELECT 
       p.id AS post_id,
