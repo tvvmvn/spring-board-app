@@ -31,10 +31,4 @@ public class Post {
   public Member getMember() {
     return member;
   }
-
-  // Business methods
-  public void updatePost(String title, String content) {
-    this.title = title;
-    this.content = content;
-  }
 }
