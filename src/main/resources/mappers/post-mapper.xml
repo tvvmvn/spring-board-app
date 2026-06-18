@@ -4,18 +4,38 @@
 
 <mapper namespace="com.example.boardapp.mapper.PostMapper">
   
-  <!-- result map -->
+  <!-- 
+  resultMap: 쿼리의 결과(result)를 객체와 매핑하는 방법을 정의합니다.
+  type: 매핑되는 객체의 타입
+  -->
   <resultMap id="postResultMap" type="com.example.boardapp.domain.Post">
+    <!-- post_id 컬럼을 id 속성에 매핑  -->
     <id property="id" column="post_id"/>
+    <!-- title 컬럼을 title 속성에 매핑 -->
     <result property="title" column="title"/>
+    <!-- content 컬럼을 content 속성에 매핑 -->
     <result property="content" column="content"/>
-    <association property="member" javaType="com.example.boardapp.domain.Member">
+
+    <!-- 
+      association: 연관관계(association)를 처리하는 코드
+      post의 member_id(외래키)를 Member 객체에 매핑하는 과정
+      javaType: 이 객체와 연관된 객체의 자료형. Member
+     -->
+    <association 
+      property="member" 
+      javaType="com.example.boardapp.domain.Member"
+    >
+      <!-- member_id 컬럼을 id 속성에 매핑 -->
       <id property="id" column="member_id"/>
+      <!-- username 컬럼을 username 속성에 매핑 -->
       <result property="username" column="username"/>
     </association>
   </resultMap>
   
-  <!-- findAll -->
+  <!-- 
+  findAll 메서드를 정의합니다.
+  resultMap: 이 쿼리의 결과를 postResultMap에게 전달합니다.
+  -->
   <select id="findAll" resultMap="postResultMap">
     SELECT 
       p.id AS post_id,
@@ -28,8 +48,16 @@
     ORDER BY p.id DESC
   </select>
 
-  <!-- findById -->
-  <select id="findById" parameterType="long" resultMap="postResultMap">
+  <!-- 
+  findById 메서드를 정의합니다. 
+  매개변수 타입은 long (int보다 큰 자료형. db의 BIGINT와 대응합니다)
+  resultMap: 이 쿼리의 결과를 postResultMap에게 전달합니다.
+  -->
+  <select 
+    id="findById" 
+    parameterType="long" 
+    resultMap="postResultMap"
+  >
     SELECT 
       p.id AS post_id,
       p.title,
@@ -41,21 +69,36 @@
     WHERE p.id = #{id}
   </select>
 
-  <!-- save -->
-  <insert id="save" parameterType="com.example.boardapp.domain.Post" useGeneratedKeys="true" keyProperty="id">
+  <!-- 
+  save 메서드를 정의한다
+  매개변수 타입: Post
+
+  -->
+  <insert 
+    id="save" 
+    parameterType="com.example.boardapp.domain.Post" 
+    useGeneratedKeys="true" 
+    keyProperty="id"
+  >
     INSERT INTO post (title, content, member_id)
     VALUES (#{title}, #{content}, #{member.id})
   </insert>
 
   <!-- update -->
-  <update id="update" parameterType="com.example.boardapp.domain.Post">
+  <update 
+    id="update" 
+    parameterType="com.example.boardapp.domain.Post"
+  >
     UPDATE post
     SET title = #{title}, content = #{content}
     WHERE id = #{id}
   </update>
 
   <!-- delete -->
-  <delete id="delete" parameterType="long">
+  <delete 
+    id="delete" 
+    parameterType="long"
+  >
     DELETE FROM post
     WHERE id = #{id}
   </delete>

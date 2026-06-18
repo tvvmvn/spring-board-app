@@ -2,21 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- MemberMapper의 매핑용 파일이라고 명시합니다 -->
 <mapper namespace="com.example.boardapp.mapper.MemberMapper">
 
-  <!-- save -->
-  <insert id="save" parameterType="com.example.boardapp.domain.Member" useGeneratedKeys="true" keyProperty="id">
+  <!-- 
+  멤버 매퍼의 save 메서드를 정의합니다
+  매개변수 자료형(parameterType): Member
+  useGeneratedKeys: 객체를 DB에 저장할 때 생성한 id를 반환하라
+  keyProperty=id : id를 객체의 id 필드에 할당하라. 
+  따라서 객체를 DB에 저장한 직후 id 필드를 사용할 수 있다.
+  -->
+  <insert 
+    id="save" 
+    parameterType="com.example.boardapp.domain.Member" 
+    useGeneratedKeys="true" 
+    keyProperty="id"
+  >
     INSERT INTO member (username, password)
     VALUES (#{username}, #{password})
   </insert>
 
-  <!-- findByUsername -->
-  <select id="findByUsername" parameterType="string" resultType="com.example.boardapp.domain.Member">
-    SELECT 
-      id, 
-      username, 
-      password
-    FROM member
+  <!-- 
+  findByUsername 메서드 정의하기
+  매개변수 타입(parameter type): String
+  반환 타입(result type): Member
+  -->
+  <select 
+    id="findByUsername" 
+    parameterType="string" 
+    resultType="com.example.boardapp.domain.Member"
+  >
+    SELECT id, username, password FROM member
     WHERE username = #{username}
   </select>
 
