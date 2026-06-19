@@ -20,7 +20,7 @@
       association: 연관관계(association)를 처리하는 코드
       post의 member_id(외래키)를 Member 객체에 매핑하는 과정
       javaType: 이 객체와 연관된 객체의 자료형. Member
-     -->
+    -->
     <association 
       property="member" 
       javaType="com.example.boardapp.domain.Member"

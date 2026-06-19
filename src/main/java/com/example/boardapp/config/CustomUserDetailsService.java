@@ -13,6 +13,7 @@ import com.example.boardapp.mapper.MemberMapper;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+  // final: 필드에 불변성을 확보합니다.
   private final MemberMapper memberMapper;
 
   public CustomUserDetailsService(MemberMapper memberMapper) {
@@ -28,8 +29,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // member로부터 UserDetails 객체를 생성합니다.
         return User.builder()
-        .username(member.getUsername())
-        .password(member.getPassword())
-        .build();
+          .username(member.getUsername())
+          .password(member.getPassword())
+          .build();
   }
 }

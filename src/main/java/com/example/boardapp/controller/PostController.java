@@ -23,10 +23,13 @@ import com.example.boardapp.mapper.PostMapper;
 
 import jakarta.validation.Valid;
 
+// 컨트롤러 빈으로 등록합니다
 @Controller
-@RequestMapping("/posts")
+// URL prefix. 이 컨트롤러가 처리하는 URL들 앞에 공통적으로 붙습니다.
+@RequestMapping("/posts") 
 public class PostController {
 
+  // 의존성 선언
   private final PostMapper postMapper;
   private final MemberMapper memberMapper;
 
@@ -35,6 +38,7 @@ public class PostController {
     this.memberMapper = memberMapper;
   }
 
+  // 게시물 작성 페이지 요청을 처리합니다.
   @GetMapping("/write")
   public String writeForm(Model model) {
 
@@ -53,7 +57,7 @@ public class PostController {
       // 인증이 완료된 사용자 정보(로그인한 사용자)를 저장하고 있는 객체
       Principal principal) {
 
-    // 게시글 유효성 검사를 통과하지 못하면 에러와 함께 화면을 다시 렌더링시킵니다.
+    // 게시글 유효성 검사를 통과하지 못하면 에러와 함께 글 작성 페이지를 다시 전송합니다
     if (bindingResult.hasErrors()) {
       return "post/write";
     }
@@ -62,18 +66,19 @@ public class PostController {
     Member loginMember = memberMapper.findByUsername(principal.getName())
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
-    // 작성자 멤버와 함께 게시물을 DB에 저장합니다.
+    // 작성자와 함께 게시물을 DB에 저장합니다.
     Post post = new Post(dto.getTitle(), dto.getContent(), loginMember);
     postMapper.save(post);
 
-    // GET /posts/details 핸들러로 이동시킵니다. 
+    // GET /posts/details 핸들러로 이동시킵니다.
+    // 즉 방금 작성한 글 상세 페이지를 전송하기 위해서
     return "redirect:/posts/details?id=" + post.getId();
   }
 
   @GetMapping
   public String list(Model model) {
 
-    // 데이터베이스에서 가져온 게시물 리스트로부터 게시물dto 리스트를 생성합니다.
+    // 데이터베이스에서 가져온 게시물 리스트로부터 글 목록 DTO(PostListResponse)를 생성합니다.
     List<PostListResponse> posts = postMapper.findAll().stream()
         .map((post) -> {
           PostListResponse dto = new PostListResponse();
@@ -84,46 +89,43 @@ public class PostController {
         })
         .collect(Collectors.toList());
 
-    // 모델: 뷰를 업데이트하는 역할
-    // 모델이 posts 데이터를 템플릿 엔진에게 입력합니다. 
-    // 뷰는 이 데이터를 바탕으로 화면을 완성합니다.
+    // 뷰에게 게시물 데이터를 전달합니다. 
     model.addAttribute("posts", posts);
 
+    // 글 목록 페이지를 전송합니다
     return "post/list";
   }
 
   @GetMapping("/details")
-  public String details(
-    // 클라이언트가 전송한 게시물의 ID
-    @RequestParam("id") Long id, 
-    Model model) {
+    // 요청 매개변수(id)에 사용자가 전송한 게시물의 ID가 저장되어있습니다.
+    // 예) /detalls?id=99
+    public String details(@RequestParam("id") Long id, Model model) {
 
-      // 게시물 검색
+      // id에 해당하는 게시물을 검색합니다.
       Post post = postMapper.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물"));
       
-      // 게시물로부터 게시물dto를 생성합니다
+      // 게시물로부터 글 상세보기 DTO(PostDetailsResponse)를 생성합니다
       PostDetailsResponse dto = new PostDetailsResponse();
       dto.setId(post.getId());
       dto.setTitle(post.getTitle());
       dto.setContent(post.getContent());
       dto.setMemberName(post.getMember().getUsername());
 
-    // 뷰에게 dto를 주입합니다.
+    // 모델이 뷰에게 dto를 전달합니다. 이제 뷰는 화면을 완성합니다.
     model.addAttribute("post", dto);
 
-    // 완성된 게시물 상세페이지 전송!
+    // 완성된 글 상세 페이지 전송!
     return "post/details";
   }
 
+  // 게시물 삭제 요청
   @PostMapping("/delete")
-  public String remove(
-    // 삭제를 요청한 게시물의 ID
-    @RequestParam Long id, 
-    // 인증이 완료된 사용자 정보
-    Principal principal) {
+  // id: 클라이언트가 삭제를 요청한 게시물의 ID. 예) /delete?id=99
+  // principal: 인증이 완료된 사용자 정보(로그인 중인 사용자)
+  public String remove(@RequestParam Long id, Principal principal) {
 
-    // 삭제할 게시물 검색
+    // 삭제할 게시물을 검색합니다.
     Post post = postMapper.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글: " + id));
 
@@ -137,6 +139,7 @@ public class PostController {
     }
 
     // GET /posts 핸들러로 이동시킵니다
+    // 즉 클라이언트에게 글 목록페이지를 전송합니다.
     return "redirect:/posts";
   }
 }

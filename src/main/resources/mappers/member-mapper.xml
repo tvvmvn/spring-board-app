@@ -8,8 +8,8 @@
   <!-- 
   멤버 매퍼의 save 메서드를 정의합니다
   매개변수 자료형(parameterType): Member
-  useGeneratedKeys: 객체를 DB에 저장할 때 생성한 id를 반환하라
-  keyProperty=id : id를 객체의 id 필드에 할당하라. 
+  useGeneratedKeys: 객체를 DB에 저장할 때 생성한 id를 반환하라.
+  keyProperty=id : id를 객체의 id 필드에 할당하라.
   따라서 객체를 DB에 저장한 직후 id 필드를 사용할 수 있다.
   -->
   <insert 
